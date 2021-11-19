@@ -1,14 +1,32 @@
-let nombre= document.getElementById("nombres");
-let apellido= document.getElementById("apellidos");
-let correo= document.getElementById("correo");
-let contraseña= document.getElementById("pas");
-let registro= document.getElementById("reg");
+const form = document.querySelector("#form-register");
 
-registro.addEventListener("click", () => {
-	console.log(nombre.textContent)
-    localStorage.setItem("nombre", nombre.value)
-    localStorage.setItem("apellido", apellido.value)
-    localStorage.setItem("correo", correo.value)
-    localStorage.setItem("clave", contraseña.value)
+const capturarDatos = form => {
+    const campos = {};
 
-})
+    for (let element of form.elements) {
+        if (!element.name) continue;
+        if (element.type == "radio" && !element.checked) continue;
+        campos[element.name] = element.value;
+    }
+
+    return campos;
+};
+
+if ( form ) {
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const campos = capturarDatos(form);
+        form.reset();
+
+        // Gardar datos en localStorage
+        localStorage.setItem("registro", JSON.stringify(campos));
+    }
+}
+
+// Si desea recuperar los datos de localStorage se puede hacer lo siguiente:
+const registro = localStorage.getItem("registro");
+
+if ( registro ) {
+    const datos = JSON.parse(registro);
+    console.log( datos );
+}
